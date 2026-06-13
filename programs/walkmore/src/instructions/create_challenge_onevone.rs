@@ -38,7 +38,7 @@ pub struct CreateChallengeOneVOne<'info> {
       associated_token::authority = creator,
       associated_token::token_program = token_program
    )]
-    pub user_ata: InterfaceAccount<'info, TokenAccount>,
+    pub player1_ata: InterfaceAccount<'info, TokenAccount>,
 
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub token_program: Interface<'info, TokenInterface>,
@@ -75,7 +75,7 @@ impl<'info> CreateChallengeOneVOne<'info> {
             CpiContext::new(
                 self.token_program.key(),
                 TransferChecked {
-                    from: self.user_ata.to_account_info(),
+                    from: self.player1_ata.to_account_info(),
                     mint: self.mint.to_account_info(),
                     to: self.vault_ata.to_account_info(),
                     authority: self.creator.to_account_info(),
