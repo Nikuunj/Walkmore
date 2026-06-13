@@ -43,13 +43,12 @@ pub struct AcceptChallengeOneVOne<'info> {
     pub system_program: Program<'info, System>,
 }
 
-impl <'info>  AcceptChallengeOneVOne<'info> {
+impl<'info> AcceptChallengeOneVOne<'info> {
     pub fn accept_challenge(&mut self) -> Result<()> {
         let currnet_time = Clock::get()?.slot;
 
         self.challenge.start_time = Some(currnet_time);
         self.challenge.end_time = Some(currnet_time.checked_add(self.challenge.duration).unwrap());
-
 
         Ok(())
     }
@@ -65,8 +64,9 @@ impl <'info>  AcceptChallengeOneVOne<'info> {
                     authority: self.player2.to_account_info(),
                 },
             ),
-            self.challenge.fee,
+            self.challenge.entry_fee,
             self.mint.decimals,
         )
     }
 }
+

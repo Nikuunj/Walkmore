@@ -54,15 +54,15 @@ impl<'info> CreateChallengeOneVOne<'info> {
         fee: u64,
         bumps: &CreateChallengeOneVOneBumps,
     ) -> Result<()> {
-        let duration_slots = duration.checked_mul(1000).unwrap() / 400;
-
         self.challenge.set_inner(ChallengeOneVOne {
             seed,
-            fee,
+            entry_fee: fee,
             end_time: None,
             start_time: None,
             mint: self.mint.key(),
-            duration: duration_slots,
+
+            // want slot so first second * 1000 / 400;
+            duration,
             player1: self.creator.key(),
             player2,
             bump: bumps.challenge,
