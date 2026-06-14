@@ -60,7 +60,6 @@ impl<'info> CreateChallengeOneVOne<'info> {
             end_time: None,
             start_time: None,
             mint: self.mint.key(),
-
             // want slot so first second * 1000 / 400;
             duration,
             player1: self.creator.key(),
