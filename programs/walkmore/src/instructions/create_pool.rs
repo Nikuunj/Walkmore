@@ -28,7 +28,8 @@ impl<'info> CreatePool<'info> {
             end_time,
             seed,
             mint,
-            total_paparticipant: 0,
+            total_participants: 0,
+            winner_count: 0,
             bump: bumps.pool
         });
         Ok(())

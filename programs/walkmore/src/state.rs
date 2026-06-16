@@ -8,7 +8,8 @@ pub struct Pool {
     pub seed: u128,
     pub mint: Pubkey,
     pub end_time: u64,
-    pub total_paparticipant: u16,
+    pub total_participants: u16,
+    pub winner_count: u16,
     pub bump: u8,
 }
 
@@ -31,7 +32,7 @@ pub struct ChallengeOneVOne {
 pub struct UserData {
     pub steps: u64,
     pub challenge: Pubkey,
-    pub last_update: i64,
+    pub last_update: u64,
     pub claimed: bool,
     pub bump: u8,
 }

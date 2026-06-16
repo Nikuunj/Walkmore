@@ -1,13 +1,17 @@
 pub mod accept_challenge;
 pub mod create_challenge_onevone;
 pub mod create_pool;
+pub mod create_user_account;
 pub mod initialize;
 pub mod join_pool;
 pub mod reject_challenge;
+pub mod winner_withdraw_onevone;
 
 pub use accept_challenge::*;
+pub use winner_withdraw_onevone::*;
 pub use create_challenge_onevone::*;
 pub use create_pool::*;
+pub use create_user_account::*;
 pub use initialize::*;
 pub use join_pool::*;
 pub use reject_challenge::*;

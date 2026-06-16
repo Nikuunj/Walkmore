@@ -4,7 +4,7 @@ use anchor_spl::{
     token_interface::{Mint, TokenAccount, TokenInterface, transfer_checked, TransferChecked},
 };
 
-use crate::Pool;
+use crate::{Pool};
 
 #[derive(Accounts)]
 pub struct JoinPool<'info> {
@@ -15,6 +15,7 @@ pub struct JoinPool<'info> {
 
     #[account(
         mut,
+        has_one = mint,
         seeds = [b"pool", pool.maker.as_ref(), pool.seed.to_le_bytes().as_ref()],
         bump = pool.bump
     )]
@@ -29,7 +30,8 @@ pub struct JoinPool<'info> {
     pub user_ata: InterfaceAccount<'info, TokenAccount>,
 
     #[account(
-        mut,    
+        init_if_needed,
+        payer = user,
         associated_token::mint = mint,
         associated_token::token_program = token_program, 
         associated_token::authority = pool
@@ -42,13 +44,21 @@ pub struct JoinPool<'info> {
 }
 
 impl <'info> JoinPool<'info> {
+
     pub fn join_pool(&mut self) -> Result<()> {
-        self.pool.total_paparticipant.checked_add(1).unwrap();
-        transfer_checked(CpiContext::new(self.token_program.key(), TransferChecked {
+        self.pool.total_participants = self
+            .pool
+            .total_participants
+            .checked_add(1)
+            .unwrap();
+
+        transfer_checked(CpiContext::new(self.token_program.key(),
+         TransferChecked {
             to: self.pool_vault.to_account_info(),
             from: self.user_ata.to_account_info(),
             mint: self.mint.to_account_info(),
             authority: self.user.to_account_info()
         }), self.pool.entry_fee, self.mint.decimals)
+
     }
 }
