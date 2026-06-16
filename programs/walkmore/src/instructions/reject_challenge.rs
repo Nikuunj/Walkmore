@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{
     associated_token::AssociatedToken,
-    token_interface::{Mint, TokenAccount, TokenInterface, transfer_checked, TransferChecked},
+    token_interface::{transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked},
 };
 
 use crate::ChallengeOneVOne;
@@ -21,7 +21,7 @@ pub struct RejectChallenge<'info> {
         has_one = player2,
         has_one = player1,
         has_one = mint,
-        close = player2,
+        close = player1,
         seeds = [b"challenge", challenge.seed.to_le_bytes().as_ref()],
         bump = challenge.bump
    )]
@@ -65,7 +65,7 @@ impl<'info> RejectChallenge<'info> {
                     from: self.vault_ata.to_account_info(),
                     authority: self.challenge.to_account_info(),
                 },
-                signer_seeds
+                signer_seeds,
             ),
             self.vault_ata.amount,
             self.mint.decimals,
