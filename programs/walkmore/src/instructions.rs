@@ -6,6 +6,8 @@ pub mod create_user_account;
 pub mod initialize;
 pub mod join_pool;
 pub mod reject_challenge;
+pub mod update_steps_challenege;
+pub mod update_steps_pool;
 pub mod winner_withdraw_onevone;
 pub mod winner_withdraw_pool;
 
@@ -17,5 +19,7 @@ pub use create_user_account::*;
 pub use initialize::*;
 pub use join_pool::*;
 pub use reject_challenge::*;
+pub use update_steps_challenege::*;
+pub use update_steps_pool::*;
 pub use winner_withdraw_onevone::*;
 pub use winner_withdraw_pool::*;

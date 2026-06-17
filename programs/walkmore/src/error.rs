@@ -8,4 +8,10 @@ pub enum ErrorCode {
     InvalidWinner,
     #[msg("Challenge not completed waiting for winner withdraw")]
     ChallengeNotCompleted,
+    #[msg("User must be one of the challenge participants")]
+    InvalidUser,
+    #[msg("Time out, time ended")]
+    Timeout,
+    #[msg("Time too TimeEarly")]
+    TimeEarly,
 }

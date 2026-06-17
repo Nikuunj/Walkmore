@@ -9,6 +9,7 @@ pub struct Pool {
     pub mint: Pubkey,
     pub target: u32,
     pub end_time: u64,
+    pub start_time: u64,
     pub total_participants: u16,
     pub winner_count: u16,
     pub winner_reward: u64,
