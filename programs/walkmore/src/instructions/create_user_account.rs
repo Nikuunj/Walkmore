@@ -32,6 +32,7 @@ impl<'info> CreateUserDataAcc<'info> {
             steps: 0,
             challenge: self.pool.key(),
             last_update: Clock::get()?.slot,
+            completed: false,
             claimed: false,
             bump: bumps.user_data,
         });

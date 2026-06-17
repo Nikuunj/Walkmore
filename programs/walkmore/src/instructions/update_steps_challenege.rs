@@ -38,7 +38,6 @@ impl<'info> UpdateStepsChallenege<'info> {
 
         self.user_data.steps = steps;
         self.user_data.last_update = currnet_slot;
-        
         Ok(())
     }
 }

@@ -28,6 +28,8 @@ pub struct ChallengeOneVOne {
     pub duration: u64,
     pub player1: Pubkey,
     pub player2: Pubkey,
+    pub p1_steps: u32,
+    pub p2_steps: u32,
     pub completed: bool,
     pub bump: u8,
 }
@@ -36,6 +38,7 @@ pub struct ChallengeOneVOne {
 #[derive(InitSpace)]
 pub struct UserData {
     pub steps: u32,
+    pub completed: bool,
     pub challenge: Pubkey,
     pub last_update: u64,
     pub claimed: bool,

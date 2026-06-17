@@ -10,7 +10,7 @@ pub struct UpdateStepsPool<'info> {
     #[account(
         mut,
         seeds = [b"pool", challenge.maker.as_ref(), challenge.seed.to_le_bytes().as_ref()],
-        bump
+        bump = challenge.bump
    )]
     pub challenge: Account<'info, Pool>,
 
@@ -26,7 +26,6 @@ pub struct UpdateStepsPool<'info> {
 impl<'info> UpdateStepsPool<'info> {
     pub fn update_steps_pool(&mut self, steps: u32) -> Result<()> {
         let currnet_slot = Clock::get()?.slot;
-
         require!(currnet_slot <= self.challenge.end_time, ErrorCode::Timeout);
 
         require!(
@@ -37,7 +36,8 @@ impl<'info> UpdateStepsPool<'info> {
         self.user_data.steps = steps;
         self.user_data.last_update = currnet_slot;
 
-        if steps >= self.challenge.target {
+        if steps >= self.challenge.target && !self.user_data.completed {
+            self.user_data.completed = true;
             self.challenge.winner_count = self.challenge.winner_count + 1;
         }
 

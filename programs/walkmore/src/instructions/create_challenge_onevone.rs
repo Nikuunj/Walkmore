@@ -4,10 +4,10 @@ use anchor_spl::{
     token_interface::{transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked},
 };
 
-use crate::ChallengeOneVOne;
+use crate::{ChallengeOneVOne, UserData};
 
 #[derive(Accounts)]
-#[instruction(seed: u64)]
+#[instruction(seed: u64, player2: Pubkey)]
 pub struct CreateChallengeOneVOne<'info> {
     #[account(mut)]
     pub creator: Signer<'info>,
@@ -40,6 +40,23 @@ pub struct CreateChallengeOneVOne<'info> {
    )]
     pub player1_ata: InterfaceAccount<'info, TokenAccount>,
 
+    #[account(
+        init,
+        payer = creator,
+        space = UserData::INIT_SPACE + UserData::DISCRIMINATOR.len(),
+        seeds = [b"user_data", creator.key().as_ref(), challenge.key().as_ref()],
+        bump
+    )]
+    pub player1_data: Account<'info, UserData>,
+    #[account(
+        init,
+        payer = creator,
+        space = UserData::INIT_SPACE + UserData::DISCRIMINATOR.len(),
+        seeds = [b"user_data", player2.as_ref(), challenge.key().as_ref()],
+        bump
+    )]
+    pub player2_data: Account<'info, UserData>,
+
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub token_program: Interface<'info, TokenInterface>,
     pub system_program: Program<'info, System>,
@@ -64,9 +81,32 @@ impl<'info> CreateChallengeOneVOne<'info> {
             duration,
             player1: self.creator.key(),
             player2,
+            p1_steps: 0,
+            p2_steps: 0,
             completed: false,
             bump: bumps.challenge,
         });
+
+        let currnet_slot = Clock::get()?.slot;
+
+        self.player1_data.set_inner(UserData {
+            steps: 0,
+            completed: false,
+            challenge: self.challenge.key(),
+            last_update: currnet_slot,
+            claimed: false,
+            bump: bumps.player1_data,
+        });
+
+        self.player2_data.set_inner(UserData {
+            steps: 0,
+            completed: false,
+            challenge: self.challenge.key(),
+            last_update: currnet_slot,
+            claimed: false,
+            bump: bumps.player2_data,
+        });
+
         Ok(())
     }
 
