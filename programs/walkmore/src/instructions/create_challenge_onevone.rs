@@ -64,6 +64,7 @@ impl<'info> CreateChallengeOneVOne<'info> {
             duration,
             player1: self.creator.key(),
             player2,
+            completed: false,
             bump: bumps.challenge,
         });
         Ok(())

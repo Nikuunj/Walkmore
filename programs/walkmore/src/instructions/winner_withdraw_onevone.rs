@@ -1,10 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{
     associated_token::AssociatedToken,
-    token_interface::{
-        close_account, transfer_checked, CloseAccount, Mint, TokenAccount, TokenInterface,
-        TransferChecked,
-    },
+    token_interface::{transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked},
 };
 
 use crate::{error::ErrorCode, ChallengeOneVOne, UserData};
@@ -19,7 +16,6 @@ pub struct WinnerWithdrawOneVOne<'info> {
 
     #[account(
         mut,
-        close = winner,
         seeds = [b"challenge", challenge.seed.to_le_bytes().as_ref()],
         bump =  challenge.bump
     )]
@@ -35,7 +31,7 @@ pub struct WinnerWithdrawOneVOne<'info> {
 
     #[account(
         mut,
-        close = winner,
+        has_one = challenge,
         seeds = [b"user_data", player1.as_ref(), challenge.key().as_ref()],
         bump = player1_data.bump
     )]
@@ -43,7 +39,7 @@ pub struct WinnerWithdrawOneVOne<'info> {
 
     #[account(
         mut,
-        close = winner,
+        has_one = challenge,
         seeds = [b"user_data", player2.as_ref(), challenge.key().as_ref()],
         bump = player2_data.bump
     )]
@@ -62,14 +58,15 @@ pub struct WinnerWithdrawOneVOne<'info> {
 
 impl<'info> WinnerWithdrawOneVOne<'info> {
     pub fn winner_withdraw_onevone(&mut self, player1: Pubkey, player2: Pubkey) -> Result<()> {
-
         let currnet_slot = Clock::get()?.slot;
 
-        require!(currnet_slot >= self.challenge.end_time.unwrap(), ErrorCode::CustomError);
-        
+        require!(
+            currnet_slot >= self.challenge.end_time.unwrap(),
+            ErrorCode::CustomError
+        );
+
         require_keys_eq!(player1, self.challenge.player1);
         require_keys_eq!(player2, self.challenge.player2);
-
 
         require!(
             self.winner.key() == player1 || self.winner.key() == player2,
@@ -90,6 +87,8 @@ impl<'info> WinnerWithdrawOneVOne<'info> {
             &self.challenge.seed.to_le_bytes(),
             &[self.challenge.bump],
         ]];
+        
+        self.challenge.completed = true;
 
         transfer_checked(
             CpiContext::new_with_signer(
@@ -104,16 +103,6 @@ impl<'info> WinnerWithdrawOneVOne<'info> {
             ),
             self.vault_ata.amount,
             self.mint.decimals,
-        )?;
-
-        close_account(CpiContext::new_with_signer(
-            self.token_program.key(),
-            CloseAccount {
-                account: self.vault_ata.to_account_info(),
-                destination: self.winner.to_account_info(),
-                authority: self.challenge.to_account_info(),
-            },
-            signer_seeds,
-        ))
+        )
     }
 }

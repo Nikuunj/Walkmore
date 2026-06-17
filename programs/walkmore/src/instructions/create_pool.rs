@@ -20,16 +20,19 @@ pub struct CreatePool<'info> {
 }
 
 impl<'info> CreatePool<'info> {
-    pub fn create_pool(&mut self,seed: u128, end_time: u64, entry_fee: u64, mint: Pubkey, bumps: &CreatePoolBumps) -> Result<()> {
+    pub fn create_pool(&mut self, seed: u128, end_time: u64, entry_fee: u64, target: u32, mint: Pubkey, bumps: &CreatePoolBumps) -> Result<()> {
 
         self.pool.set_inner(Pool {
-           maker: self.maker.key(),
+            maker: self.maker.key(),
             entry_fee,
             end_time,
             seed,
             mint,
             total_participants: 0,
+            target,
             winner_count: 0,
+            winner_reward: 0,
+            finalies: false,
             bump: bumps.pool
         });
         Ok(())

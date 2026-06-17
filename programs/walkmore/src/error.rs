@@ -6,4 +6,6 @@ pub enum ErrorCode {
     CustomError,
     #[msg("Winner must be one of the challenge participants")]
     InvalidWinner,
+    #[msg("Challenge not completed waiting for winner withdraw")]
+    ChallengeNotCompleted,
 }
