@@ -1,8 +1,7 @@
 use anchor_lang::prelude::*;
-use anchor_spl::{associated_token::AssociatedToken, token_interface::{Mint, TokenAccount, TokenInterface}};
+use anchor_spl::{associated_token::AssociatedToken, token_interface::{Mint, TokenAccount, TokenInterface, transfer_checked, TransferChecked}};
 
 use crate::{Pool, UserData, error::ErrorCode};
-
 #[derive(Accounts)]
 pub struct WinnerWithdrawPool<'info> {
     #[account(mut)]
@@ -52,14 +51,31 @@ impl<'info> WinnerWithdrawPool<'info> {
         
         let currnet_slot = Clock::get()?.slot;
 
-        require!(currnet_slot >= self.pool.end_time, ErrorCode::CustomError);
-        require!(self.pool.target <= self.user_data.steps, ErrorCode::CustomError);
+        require!(currnet_slot > self.pool.end_time, ErrorCode::CustomError);
+        require!(self.pool.target <= self.user_data.steps && self.user_data.completed, ErrorCode::CustomError);
+        require!(!self.user_data.claimed, ErrorCode::AlreadyClaimed);
+
+        // [b"pool", pool.maker.as_ref(), pool.seed.to_le_bytes().as_ref()]
+
+        let signer_seeds: &[&[&[u8]]] = &[&[
+            b"pool",
+            self.pool.maker.as_ref(),
+            &self.pool.seed.to_be_bytes(),
+            &[self.pool.bump]
+        ]];
 
         // tranfer 
         // enetry fee + loser user amount / winner + 1(1 is for contract get paid);
+        let loser_amount = (self.pool.total_participants.checked_sub(self.pool.winner_count).unwrap() as u64).checked_mul(self.pool.entry_fee).unwrap().checked_div((self.pool.winner_count + 1 )as u64).unwrap();
+        let mut winning_amount = self.pool.entry_fee;
 
+
+
+        winning_amount = winning_amount + loser_amount;
+
+        transfer_checked(
+            CpiContext::new_with_signer(self.token_program.key(), 
+            TransferChecked { from: self.pool_vault.to_account_info(), mint: self.mint.to_account_info(), to: self.user_ata.to_account_info(), authority: self.pool.to_account_info() }, signer_seeds), winning_amount, self.mint.decimals)
         
-
-        Ok(())
     }
 }

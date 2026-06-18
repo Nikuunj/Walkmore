@@ -32,8 +32,6 @@ impl<'info> CreatePool<'info> {
             start_time,
             target,
             winner_count: 0,
-            winner_reward: 0,
-            finalies: false,
             bump: bumps.pool
         });
         Ok(())

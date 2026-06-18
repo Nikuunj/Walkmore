@@ -12,8 +12,6 @@ pub struct Pool {
     pub start_time: u64,
     pub total_participants: u16,
     pub winner_count: u16,
-    pub winner_reward: u64,
-    pub finalies: bool,
     pub bump: u8,
 }
 

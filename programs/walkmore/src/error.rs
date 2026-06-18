@@ -14,4 +14,10 @@ pub enum ErrorCode {
     Timeout,
     #[msg("Time too TimeEarly")]
     TimeEarly,
+    #[msg("Invalid steps")]
+    InvalidSteps,
+    #[msg("Pool not finalize")]
+    PoolNotFinelise,
+    #[msg("Already claimed")]
+    AlreadyClaimed
 }

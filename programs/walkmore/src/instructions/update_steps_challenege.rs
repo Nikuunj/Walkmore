@@ -30,15 +30,21 @@ impl<'info> UpdateStepsChallenege<'info> {
             ErrorCode::InvalidUser
         );
 
+        require!(steps >= self.user_data.steps, ErrorCode::InvalidSteps);
         let currnet_slot = Clock::get()?.slot;
 
-        require!(currnet_slot <= self.challenge.end_time.unwrap(), ErrorCode::Timeout);
+        require!(
+            currnet_slot <= self.challenge.end_time.unwrap(),
+            ErrorCode::Timeout
+        );
 
-        require!(currnet_slot >= self.challenge.start_time.unwrap(), ErrorCode::TimeEarly);
+        require!(
+            currnet_slot >= self.challenge.start_time.unwrap(),
+            ErrorCode::TimeEarly
+        );
 
         self.user_data.steps = steps;
         self.user_data.last_update = currnet_slot;
         Ok(())
     }
 }
-
