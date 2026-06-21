@@ -51,8 +51,11 @@ impl<'info> WinnerWithdrawPool<'info> {
         
         let currnet_slot = Clock::get()?.slot;
 
-        require!(currnet_slot > self.pool.end_time, ErrorCode::CustomError);
-        require!(self.pool.target <= self.user_data.steps && self.user_data.completed, ErrorCode::CustomError);
+        require!(
+            currnet_slot > self.pool.end_time
+                || (self.pool.target <= self.user_data.steps && self.user_data.completed),
+            ErrorCode::CustomError
+        );
         require!(!self.user_data.claimed, ErrorCode::AlreadyClaimed);
 
         // [b"pool", pool.maker.as_ref(), pool.seed.to_le_bytes().as_ref()]
@@ -60,7 +63,7 @@ impl<'info> WinnerWithdrawPool<'info> {
         let signer_seeds: &[&[&[u8]]] = &[&[
             b"pool",
             self.pool.maker.as_ref(),
-            &self.pool.seed.to_be_bytes(),
+            &self.pool.seed.to_le_bytes(),
             &[self.pool.bump]
         ]];
 

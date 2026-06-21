@@ -17,7 +17,7 @@ pub struct CreateUserDataAcc<'info> {
     #[account(
         init,
         payer = user,
-        seeds = [b"use-data", user.key().as_ref(), pool.key().as_ref()],
+        seeds = [b"user_data", user.key().as_ref(), pool.key().as_ref()],
         space = UserData::INIT_SPACE + UserData::DISCRIMINATOR.len(),
         bump
     )]

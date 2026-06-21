@@ -59,7 +59,15 @@ pub struct CloseChallenge<'info> {
 
 impl<'info> CloseChallenge<'info> {
     pub fn close_challenge(&mut self) -> Result<()> {
-        require!(self.challenge.completed, ErrorCode::ChallengeNotCompleted);
+        let currnet_slot = Clock::get()?.slot;
+
+        require!(
+            self.challenge.completed
+                || (self.challenge.end_time.is_some()
+                    && currnet_slot >= self.challenge.end_time.unwrap()
+                    && self.player1_data.steps == self.player2_data.steps),
+            ErrorCode::ChallengeNotCompleted
+        );
 
         let signer_seeds: &[&[&[u8]]] = &[&[
             b"challenge",
