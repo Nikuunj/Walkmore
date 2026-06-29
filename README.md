@@ -13,6 +13,14 @@ cd Walkmore
 
 ---
 
+## Devnet
+
+Program Id: 2147VBdRR2xGS6BnY8RsprPhh4MHPoApgnzqgNm2LLFu
+
+Signature: 9KbVdLat2PEeJhF6h3J9uWSgAEQHeyF7tMaANcTm2DFScqUgX9Q94JR5izCqpn6cRJbgKaiuxfKmqyqaT7j8D9J
+
+---
+
 # Installation
 
 ## Windows

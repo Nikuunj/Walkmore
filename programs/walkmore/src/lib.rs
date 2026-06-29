@@ -9,7 +9,7 @@ pub use constants::*;
 pub use instructions::*;
 pub use state::*;
 
-declare_id!("3F9toSY7wmhJ13RmHrEHrpkr4CRnnV7XizWxDB4bmepx");
+declare_id!("2147VBdRR2xGS6BnY8RsprPhh4MHPoApgnzqgNm2LLFu");
 
 #[program]
 pub mod walkmore {

@@ -5,11 +5,11 @@ package_manager = "yarn"
 resolution = true
 skip-lint = false
 
-[programs.localnet]
-walkmore = "3F9toSY7wmhJ13RmHrEHrpkr4CRnnV7XizWxDB4bmepx"
+[programs.devnet]
+walkmore = "2147VBdRR2xGS6BnY8RsprPhh4MHPoApgnzqgNm2LLFu"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
